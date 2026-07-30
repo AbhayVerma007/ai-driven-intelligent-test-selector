@@ -1,1 +1,1 @@
-def login(): pass
+def login(): return False  # bug!
