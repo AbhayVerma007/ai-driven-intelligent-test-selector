@@ -1,0 +1,87 @@
+name: Model Retraining
+
+on:
+  schedule:
+    - cron: "0 3 * * 0" # weekly, Sunday 03:00 UTC
+  workflow_dispatch: {}
+
+jobs:
+  retrain:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install TestWise
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -e .
+
+      - name: Collect recent commit/test history
+        run: |
+          testwise collect --max-commits 500 --output-json data/test_history.json
+
+      - name: Save current model metrics (for before/after comparison)
+        id: before
+        run: |
+          if [ -f models/test_failure_model.joblib ]; then
+            cp models/test_failure_model.joblib models/previous_model.joblib
+          fi
+
+      - name: Retrain model
+        id: train
+        run: |
+          testwise train \
+            --history-json data/test_history.json \
+            --model-path models/test_failure_model.joblib \
+            --feature-importance-path models/feature_importance.png \
+            | tee data/training_metrics.json
+
+      - name: Check for changes
+        id: diff
+        run: |
+          if git diff --quiet -- models/ data/test_history.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create pull request with updated model
+        if: steps.diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "chore: retrain TestWise model with latest CI history"
+          title: "Scheduled model retraining"
+          body: |
+            Automated retraining run.
+
+            Training metrics:
+            ```json
+            $(cat data/training_metrics.json)
+            ```
+          branch: testwise/model-retrain-${{ github.run_id }}
+          add-paths: |
+            models/
+            data/test_history.json
+
+      - name: Post training summary to Slack
+        if: steps.diff.outputs.changed == 'true' && env.SLACK_WEBHOOK_URL != ''
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          curl -s -X POST -H 'Content-type: application/json' \
+            --data "{\"text\": \"TestWise AI model retrained. See PR in ${{ github.repository }}.\"}" \
+            "$SLACK_WEBHOOK_URL"

@@ -1,0 +1,90 @@
+name: Intelligent Testing
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches-ignore: [main]
+
+jobs:
+  select-and-run-tests:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout (full history for diffing)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install TestWise
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -e .
+
+      - name: Determine base ref
+        id: base
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "ref=origin/${{ github.base_ref }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "ref=HEAD~1" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run AI test selection
+        run: |
+          testwise select \
+            --base-ref "${{ steps.base.outputs.ref }}" \
+            --head-ref HEAD \
+            --test-path tests \
+            --output-json data/selected_tests.json \
+            --output-report data/selection_report.md
+
+      - name: Run selected tests
+        run: |
+          python - <<'PY'
+          import json
+          data = json.load(open("data/selected_tests.json"))
+          tests = data["selected_tests"]
+          with open("data/pytest_args.txt", "w") as f:
+              f.write(" ".join(tests))
+          PY
+          if [ -s data/pytest_args.txt ]; then
+            xargs pytest -v < data/pytest_args.txt
+          else
+            echo "No tests selected — running full suite as a safety fallback."
+            pytest -v tests
+          fi
+
+      - name: Post selection report as PR comment
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('data/selection_report.md', 'utf8');
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: report,
+            });
+
+      - name: Upload selection artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: testwise-selection-${{ github.run_id }}
+          path: |
+            data/selected_tests.json
+            data/selection_report.md
+            data/audit_log.jsonl
