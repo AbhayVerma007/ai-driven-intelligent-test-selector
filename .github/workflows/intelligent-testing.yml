@@ -88,3 +88,122 @@ jobs:
             data/selected_tests.json
             data/selection_report.md
             data/audit_log.jsonl
+
+      - name: 📊 TestWise AI - Run Summary
+        if: always()
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          print("=" * 70)
+          print("📊 TESTWISE AI — RUN SUMMARY")
+          print("=" * 70)
+
+          # ------------------------------------------------------------
+          # 1. WHAT HAPPENED
+          # ------------------------------------------------------------
+          selected_path = Path("data/selected_tests.json")
+          if not selected_path.exists():
+              print("\n⚠️  No selection data found — selection step may have failed.")
+              raise SystemExit(0)
+
+          data = json.loads(selected_path.read_text())
+          summary = data["selection_summary"]
+          decisions = data.get("decisions", {})
+
+          total = summary["total_tests"]
+          selected = summary["selected"]
+          skipped = total - selected
+          savings_pct = summary["savings_percentage"]
+
+          print("\n🔎 1. WHAT HAPPENED")
+          print("-" * 70)
+          print(f"   Total tests found     : {total}")
+          print(f"   Tests selected to run : {selected}")
+          print(f"   Tests skipped         : {skipped}")
+          print(f"   Savings percentage    : {savings_pct}%")
+
+          # ------------------------------------------------------------
+          # 2. WHY TESTS WERE SKIPPED (from the audit log)
+          # ------------------------------------------------------------
+          print("\n🧾 2. WHY TESTS WERE SKIPPED")
+          print("-" * 70)
+
+          audit_path = Path("data/audit_log.jsonl")
+          skipped_reasons = {}
+          if audit_path.exists():
+              last_line = audit_path.read_text().strip().splitlines()[-1]
+              audit_entry = json.loads(last_line)
+              for test_name, d in audit_entry["decisions"].items():
+                  if not d["run"]:
+                      skipped_reasons[test_name] = d["reason"]
+          else:
+              # fall back to the decisions embedded in selected_tests.json
+              for test_name, d in decisions.items():
+                  if not d.get("run"):
+                      skipped_reasons[test_name] = d.get("reason", "unknown")
+
+          if skipped_reasons:
+              for test_name, reason in skipped_reasons.items():
+                  print(f"   ⏭️  {test_name}")
+                  print(f"       reason: {reason}")
+          else:
+              print("   (no tests were skipped this run)")
+
+          # ------------------------------------------------------------
+          # 3. HOW SAVINGS ARE CALCULATED
+          # ------------------------------------------------------------
+          print("\n🧮 3. HOW SAVINGS ARE CALCULATED")
+          print("-" * 70)
+          print(f"   (tests_skipped / total_tests) × 100 = savings%")
+          print(f"   ({skipped} / {total}) × 100 = {savings_pct}%")
+          print("   Note: reported savings_percentage is actually based on")
+          print("   estimated *runtime* saved (sum of historical per-test")
+          print("   durations), not a raw test-count ratio — the two will")
+          print("   diverge whenever skipped tests run faster/slower than average.")
+
+          # ------------------------------------------------------------
+          # 4. MODEL HEALTH CHECK
+          # ------------------------------------------------------------
+          print("\n🩺 4. MODEL HEALTH CHECK")
+          print("-" * 70)
+
+          metrics_path = Path("models/metrics.json")
+          if metrics_path.exists():
+              metrics = json.loads(metrics_path.read_text())
+              precision = metrics.get("precision")
+              recall = metrics.get("recall")
+              f1 = metrics.get("f1")
+              print(f"   Precision : {precision:.1%}" if precision is not None else "   Precision : N/A")
+              print(f"   Recall    : {recall:.1%}" if recall is not None else "   Recall    : N/A")
+              print(f"   F1 Score  : {f1:.1%}" if f1 is not None else "   F1 Score  : N/A")
+
+              if recall is not None and recall < 0.85:
+                  print("\n   Phase 3 trigger: ⚠️  TRIGGERED (recall < 85% — Phase 3 activation recommended)")
+                  phase3_triggered = True
+              else:
+                  print("\n   Phase 3 trigger: NOT TRIGGERED (recall > 85%)")
+                  phase3_triggered = False
+          else:
+              print("   Model metrics not found (models/metrics.json missing —")
+              print("   this workflow does not train; see model-retraining.yml).")
+              phase3_triggered = None
+
+          print("   Phase 4 trigger: AWAITING PRODUCTION ADOPTION")
+
+          # ------------------------------------------------------------
+          # 5. NEXT STEPS
+          # ------------------------------------------------------------
+          print("\n🚀 5. NEXT STEPS")
+          print("-" * 70)
+          if phase3_triggered is True:
+              print("   → Consider activating Phase 3 (semantic_analyzer.py + feedback_loop.py)")
+          elif phase3_triggered is False:
+              print("   → Model performing well. Phase 3 on hold.")
+          else:
+              print("   → Run `testwise train` to generate model metrics before Phase 3 can be evaluated.")
+          print("   → If >50 stars/adoption: Phase 4 activation recommended (cost_tracker, Docker, multi-CI)")
+
+          print("\n" + "=" * 70)
+          PY

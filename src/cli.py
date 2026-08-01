@@ -31,8 +31,13 @@ def cmd_train(args: argparse.Namespace) -> None:
     metrics = predictor.train(matrix)
     predictor.save_model()
     predictor.plot_feature_importance(output_path=args.feature_importance_path)
+
+    metrics_path = Path(args.model_path).parent / "metrics.json"
+    metrics_path.write_text(json.dumps(metrics, indent=2))
+
     print(json.dumps(metrics, indent=2))
     print(f"Model saved to {predictor.model_path}")
+    print(f"Metrics saved to {metrics_path}")
 
 
 def cmd_select(args: argparse.Namespace) -> None:

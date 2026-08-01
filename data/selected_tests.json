@@ -1,80 +1,265 @@
 {
   "selected_tests": [
-    "tests/test_auth.py::test_login",
-    "tests/test_collector.py::test_validate_git_repo_raises_outside_repo",
-    "tests/test_collector.py::test_extract_diff_features_detects_config_and_api_changes",
-    "tests/test_collector.py::test_generate_synthetic_data_populates_db",
-    "tests/test_selector.py::test_critical_test_always_selected_even_if_scored_low",
-    "tests/test_selector.py::test_max_skip_rate_cap_enforced",
-    "tests/test_selector.py::test_low_risk_minimum_sample_rate_enforced",
-    "tests/test_selector.py::test_audit_log_written_for_every_selection",
-    "tests/test_selector.py::test_generate_report_contains_summary"
+    "tests/test_module_0.py::test_case_1",
+    "tests/test_module_0.py::test_case_7",
+    "tests/test_module_1.py::test_case_15",
+    "tests/test_module_1.py::test_case_8",
+    "tests/test_module_2.py::test_case_17",
+    "tests/test_module_2.py::test_case_20",
+    "tests/test_module_3.py::test_case_30",
+    "tests/test_module_4.py::test_case_32"
   ],
   "selection_summary": {
-    "total_tests": 9,
-    "selected": 9,
+    "total_tests": 40,
+    "selected": 8,
     "high_risk": 0,
-    "medium_risk": 8,
-    "low_risk_sampled": 0,
-    "critical": 1,
-    "estimated_time_seconds": 9.0,
-    "original_time_seconds": 9.0,
-    "savings_percentage": 0.0
+    "medium_risk": 0,
+    "low_risk_sampled": 8,
+    "critical": 0,
+    "estimated_time_seconds": 12.18,
+    "original_time_seconds": 61.24,
+    "savings_percentage": 80.1
   },
   "decisions": {
-    "tests/test_auth.py::test_login": {
-      "run": true,
-      "tier": "medium_risk",
-      "score": 0.5949759499771444,
-      "reason": "medium risk (0.59) and covers changed code"
+    "tests/test_module_0.py::test_case_0": {
+      "run": false,
+      "tier": "low_risk",
+      "score": 0.07353310409230307,
+      "reason": "low risk (0.07) \u2014 pending 10% sample"
     },
-    "tests/test_collector.py::test_validate_git_repo_raises_outside_repo": {
+    "tests/test_module_0.py::test_case_1": {
       "run": true,
-      "tier": "medium_risk",
-      "score": 0.4962974360177706,
-      "reason": "medium risk (0.50) and covers changed code"
+      "tier": "low_risk",
+      "score": 0.16599806812170467,
+      "reason": "low risk (0.17) \u2014 pending 10% sample \u2014 promoted to satisfy max 80% skip-rate cap"
     },
-    "tests/test_collector.py::test_extract_diff_features_detects_config_and_api_changes": {
-      "run": true,
-      "tier": "medium_risk",
-      "score": 0.4962974360177706,
-      "reason": "medium risk (0.50) and covers changed code"
+    "tests/test_module_0.py::test_case_2": {
+      "run": false,
+      "tier": "low_risk",
+      "score": 0.0875676688469833,
+      "reason": "low risk (0.09) \u2014 pending 10% sample"
     },
-    "tests/test_collector.py::test_generate_synthetic_data_populates_db": {
-      "run": true,
-      "tier": "medium_risk",
-      "score": 0.4962974360177706,
-      "reason": "medium risk (0.50) and covers changed code"
+    "tests/test_module_0.py::test_case_3": {
+      "run": false,
+      "tier": "low_risk",
+      "score": 0.07353310409230307,
+      "reason": "low risk (0.07) \u2014 pending 10% sample"
     },
-    "tests/test_selector.py::test_critical_test_always_selected_even_if_scored_low": {
-      "run": true,
-      "tier": "critical",
-      "score": 0.4962974360177706,
-      "reason": "critical/smoke test \u2014 always runs"
+    "tests/test_module_0.py::test_case_4": {
+      "run": false,
+      "tier": "low_risk",
+      "score": 0.08164846426728388,
+      "reason": "low risk (0.08) \u2014 pending 10% sample"
     },
-    "tests/test_selector.py::test_max_skip_rate_cap_enforced": {
-      "run": true,
-      "tier": "medium_risk",
-      "score": 0.4962974360177706,
-      "reason": "medium risk (0.50) and covers changed code"
+    "tests/test_module_0.py::test_case_5": {
+      "run": false,
+      "tier": "low_risk",
+      "score": 0.07690589328566752,
+      "reason": "low risk (0.08) \u2014 pending 10% sample"
     },
-    "tests/test_selector.py::test_low_risk_minimum_sample_rate_enforced": {
-      "run": true,
-      "tier": "medium_risk",
-      "score": 0.4962974360177706,
-      "reason": "medium risk (0.50) and covers changed code"
+    "tests/test_module_0.py::test_case_6": {
+      "run": false,
+      "tier": "low_risk",
+      "score": 0.07799628678393547,
+      "reason": "low risk (0.08) \u2014 pending 10% sample"
     },
-    "tests/test_selector.py::test_audit_log_written_for_every_selection": {
+    "tests/test_module_0.py::test_case_7": {
       "run": true,
-      "tier": "medium_risk",
-      "score": 0.4962974360177706,
-      "reason": "medium risk (0.50) and covers changed code"
+      "tier": "low_risk",
+      "score": 0.16045831547937636,
+      "reason": "low risk (0.16) \u2014 pending 10% sample \u2014 promoted to satisfy max 80% skip-rate cap"
     },
-    "tests/test_selector.py::test_generate_report_contains_summary": {
+    "tests/test_module_1.py::test_case_10": {
+      "run": false,
+      "tier": "low_risk",
+      "score": 0.07353310409230307,
+      "reason": "low risk (0.07) \u2014 pending 10% sample"
+    },
+    "tests/test_module_1.py::test_case_11": {
+      "run": false,
+      "tier": "low_risk",
+      "score": 0.07799628678393547,
+      "reason": "low risk (0.08) \u2014 pending 10% sample"
+    },
+    "tests/test_module_1.py::test_case_12": {
+      "run": false,
+      "tier": "low_risk",
+      "score": 0.07353310409230307,
+      "reason": "low risk (0.07) \u2014 pending 10% sample"
+    },
+    "tests/test_module_1.py::test_case_13": {
+      "run": false,
+      "tier": "low_risk",
+      "score": 0.08893640808370315,
+      "reason": "low risk (0.09) \u2014 pending 10% sample"
+    },
+    "tests/test_module_1.py::test_case_14": {
+      "run": false,
+      "tier": "low_risk",
+      "score": 0.07690589328566752,
+      "reason": "low risk (0.08) \u2014 pending 10% sample"
+    },
+    "tests/test_module_1.py::test_case_15": {
       "run": true,
-      "tier": "medium_risk",
-      "score": 0.4962974360177706,
-      "reason": "medium risk (0.50) and covers changed code"
+      "tier": "low_risk",
+      "score": 0.15737757648616543,
+      "reason": "low risk (0.16) \u2014 pending 10% sample \u2014 promoted to satisfy max 80% skip-rate cap"
+    },
+    "tests/test_module_1.py::test_case_8": {
+      "run": true,
+      "tier": "low_risk",
+      "score": 0.07468859767255698,
+      "reason": "low risk (0.07) \u2014 pending 10% sample \u2014 selected in random safety sample"
+    },
+    "tests/test_module_1.py::test_case_9": {
+      "run": false,
+      "tier": "low_risk",
+      "score": 0.07353310409230307,
+      "reason": "low risk (0.07) \u2014 pending 10% sample"
+    },
+    "tests/test_module_2.py::test_case_16": {
+      "run": false,
+      "tier": "low_risk",
+      "score": 0.08508463960135833,
+      "reason": "low risk (0.09) \u2014 pending 10% sample"
+    },
+    "tests/test_module_2.py::test_case_17": {
+      "run": true,
+      "tier": "low_risk",
+      "score": 0.1627790811106098,
+      "reason": "low risk (0.16) \u2014 pending 10% sample \u2014 promoted to satisfy max 80% skip-rate cap"
+    },
+    "tests/test_module_2.py::test_case_18": {
+      "run": false,
+      "tier": "low_risk",
+      "score": 0.07353310409230307,
+      "reason": "low risk (0.07) \u2014 pending 10% sample"
+    },
+    "tests/test_module_2.py::test_case_19": {
+      "run": false,
+      "tier": "low_risk",
+      "score": 0.08893640808370315,
+      "reason": "low risk (0.09) \u2014 pending 10% sample"
+    },
+    "tests/test_module_2.py::test_case_20": {
+      "run": true,
+      "tier": "low_risk",
+      "score": 0.07353310409230307,
+      "reason": "low risk (0.07) \u2014 pending 10% sample \u2014 selected in random safety sample"
+    },
+    "tests/test_module_2.py::test_case_21": {
+      "run": false,
+      "tier": "low_risk",
+      "score": 0.07353310409230307,
+      "reason": "low risk (0.07) \u2014 pending 10% sample"
+    },
+    "tests/test_module_2.py::test_case_22": {
+      "run": false,
+      "tier": "low_risk",
+      "score": 0.07353310409230307,
+      "reason": "low risk (0.07) \u2014 pending 10% sample"
+    },
+    "tests/test_module_2.py::test_case_23": {
+      "run": false,
+      "tier": "low_risk",
+      "score": 0.07353310409230307,
+      "reason": "low risk (0.07) \u2014 pending 10% sample"
+    },
+    "tests/test_module_3.py::test_case_24": {
+      "run": false,
+      "tier": "low_risk",
+      "score": 0.07690589328566752,
+      "reason": "low risk (0.08) \u2014 pending 10% sample"
+    },
+    "tests/test_module_3.py::test_case_25": {
+      "run": false,
+      "tier": "low_risk",
+      "score": 0.07353310409230307,
+      "reason": "low risk (0.07) \u2014 pending 10% sample"
+    },
+    "tests/test_module_3.py::test_case_26": {
+      "run": false,
+      "tier": "low_risk",
+      "score": 0.08508463960135833,
+      "reason": "low risk (0.09) \u2014 pending 10% sample"
+    },
+    "tests/test_module_3.py::test_case_27": {
+      "run": false,
+      "tier": "low_risk",
+      "score": 0.07353310409230307,
+      "reason": "low risk (0.07) \u2014 pending 10% sample"
+    },
+    "tests/test_module_3.py::test_case_28": {
+      "run": false,
+      "tier": "low_risk",
+      "score": 0.07799628678393547,
+      "reason": "low risk (0.08) \u2014 pending 10% sample"
+    },
+    "tests/test_module_3.py::test_case_29": {
+      "run": false,
+      "tier": "low_risk",
+      "score": 0.07353310409230307,
+      "reason": "low risk (0.07) \u2014 pending 10% sample"
+    },
+    "tests/test_module_3.py::test_case_30": {
+      "run": true,
+      "tier": "low_risk",
+      "score": 0.16066536110533824,
+      "reason": "low risk (0.16) \u2014 pending 10% sample \u2014 selected in random safety sample"
+    },
+    "tests/test_module_3.py::test_case_31": {
+      "run": false,
+      "tier": "low_risk",
+      "score": 0.08508463960135833,
+      "reason": "low risk (0.09) \u2014 pending 10% sample"
+    },
+    "tests/test_module_4.py::test_case_32": {
+      "run": true,
+      "tier": "low_risk",
+      "score": 0.07353310409230307,
+      "reason": "low risk (0.07) \u2014 pending 10% sample \u2014 selected in random safety sample"
+    },
+    "tests/test_module_4.py::test_case_33": {
+      "run": false,
+      "tier": "low_risk",
+      "score": 0.08508463960135833,
+      "reason": "low risk (0.09) \u2014 pending 10% sample"
+    },
+    "tests/test_module_4.py::test_case_34": {
+      "run": false,
+      "tier": "low_risk",
+      "score": 0.07690589328566752,
+      "reason": "low risk (0.08) \u2014 pending 10% sample"
+    },
+    "tests/test_module_4.py::test_case_35": {
+      "run": false,
+      "tier": "low_risk",
+      "score": 0.07690589328566752,
+      "reason": "low risk (0.08) \u2014 pending 10% sample"
+    },
+    "tests/test_module_4.py::test_case_36": {
+      "run": false,
+      "tier": "low_risk",
+      "score": 0.07353310409230307,
+      "reason": "low risk (0.07) \u2014 pending 10% sample"
+    },
+    "tests/test_module_4.py::test_case_37": {
+      "run": false,
+      "tier": "low_risk",
+      "score": 0.0798835540140687,
+      "reason": "low risk (0.08) \u2014 pending 10% sample"
+    },
+    "tests/test_module_4.py::test_case_38": {
+      "run": false,
+      "tier": "low_risk",
+      "score": 0.10108338600296018,
+      "reason": "low risk (0.10) \u2014 pending 10% sample"
+    },
+    "tests/test_module_4.py::test_case_39": {
+      "run": false,
+      "tier": "low_risk",
+      "score": 0.07353310409230307,
+      "reason": "low risk (0.07) \u2014 pending 10% sample"
     }
   }
 }
