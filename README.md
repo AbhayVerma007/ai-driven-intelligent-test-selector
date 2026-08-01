@@ -174,7 +174,8 @@ Activation trigger: Production adoption or community interest
 ## 🚧 Current Constraints
 
 - **Predictive accuracy is still warming up.** The bootstrap model reflects synthetic data, not your project's real failure history — that arrives automatically through weekly retraining, not a rewrite.
-- **GitHub Actions workflows are written and locally verified, but not yet exercised in a live Actions run** — first real PR will be the first live test.
+- **GitHub Actions workflows are live and tested** — the intelligent 
+  testing pipeline runs on every push to feature branches and PRs.
 - Test discovery shells out to `pytest --collect-only`; repos with heavily customized pytest plugins should double-check collection output matches expectations.
 - File-to-test matching currently uses filename similarity, not an import graph — accurate enough to bootstrap on, with room to sharpen as Phase 3 lands.
 
