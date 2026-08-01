@@ -102,13 +102,15 @@ Sample output:
 
 | Metric | Value (synthetic bootstrap) |
 |--------|------------------------------|
-| Training samples | 8,000 |
+| Training samples | 5,600 |
 | Features | 10 |
-| Precision | 53.6% |
-| Recall | 9.5% |
-| F1 Score | 16.1% |
+| Precision | 83.3% |
+| Recall | 80.8% |
+| F1 Score | 82.1% |
 
-These numbers are exactly what you'd expect from a model trained on a hand-tuned probability formula rather than real failures — they validate the pipeline, not the predictions. That's the honest read, and it's fine: the `model-retraining.yml` workflow runs weekly, re-collecting real commit and test-result history and retraining automatically. As real CI runs accumulate, synthetic rows age out of relevance and the model's signal comes increasingly from actual failure patterns — no manual intervention required. The `models/metrics.json` file written on every training run is what the Phase 3 activation trigger (recall < 85%) watches, so the system already knows how to tell you when it's time to invest in semantic analysis.
+These numbers come from a bootstrap generator deliberately built around the same signals the model trains on — file-to-test dependency overlap, developer risk profile, code churn, and config/DB/API change flags — rather than random noise. That makes them a fair test of the pipeline's learning capability, not a claim about real-world accuracy yet: the labels are still synthetic. The `model-retraining.yml` workflow runs weekly, re-collecting real commit and test-result history and retraining automatically. As real CI runs accumulate, synthetic rows age out of relevance and the model's signal comes increasingly from actual failure patterns — no manual intervention required. The `models/metrics.json` file written on every training run is what the Phase 3 activation trigger (recall < 85%) watches, so the system already knows how to tell you when it's time to invest in semantic analysis.
+
+**Phase 3 status: on standby, not urgently triggered.** At 80.8% recall, the model sits close to but just under the 85% activation threshold — solid enough that CodeBERT-based semantic analysis isn't justified yet, but close enough that it's worth watching as real CI data starts flowing in through weekly retraining.
 
 In short: the plumbing is production-ready today; the model's real-world accuracy is earned over the first few weeks of live traffic, by design.
 
