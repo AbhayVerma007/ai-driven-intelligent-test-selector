@@ -179,11 +179,14 @@ jobs:
               print(f"   Recall    : {recall:.1%}" if recall is not None else "   Recall    : N/A")
               print(f"   F1 Score  : {f1:.1%}" if f1 is not None else "   F1 Score  : N/A")
 
-              if recall is not None and recall < 0.85:
-                  print("\n   Phase 3 trigger: ⚠️  TRIGGERED (recall < 85% — Phase 3 activation recommended)")
+              if recall is not None and recall < 0.80:
+                  print("\n   Phase 3 trigger: ⚠️  TRIGGERED (recall < 80% — Phase 3 activation recommended)")
                   phase3_triggered = True
+              elif recall is not None and recall < 0.85:
+                  print("\n   Phase 3 trigger: ON STANDBY (recall 80-85% — approaching threshold, watching)")
+                  phase3_triggered = "standby"
               else:
-                  print("\n   Phase 3 trigger: NOT TRIGGERED (recall > 85%)")
+                  print("\n   Phase 3 trigger: NOT TRIGGERED (recall >= 85% — model performing well)")
                   phase3_triggered = False
           else:
               print("   Model metrics not found (models/metrics.json missing —")
@@ -199,6 +202,8 @@ jobs:
           print("-" * 70)
           if phase3_triggered is True:
               print("   → Consider activating Phase 3 (semantic_analyzer.py + feedback_loop.py)")
+          elif phase3_triggered == "standby":
+              print("   → Recall approaching threshold. Keep watching, no action needed yet.")
           elif phase3_triggered is False:
               print("   → Model performing well. Phase 3 on hold.")
           else:
