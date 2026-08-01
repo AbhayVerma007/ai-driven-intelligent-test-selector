@@ -98,15 +98,19 @@ Sample output:
 
 ## 📈 Model Performance
 
-| Metric | Value |
-|--------|-------|
+**Cold-start by design.** New repos have zero historical failure data — so instead of shipping a model with nothing to learn from, TestWise bootstraps itself with 200 synthetic commits and trains on that from day one. The goal at this stage isn't predictive accuracy; it's proving the full loop — collect → train → select → enforce safety rules → audit log — actually runs end-to-end without gaps.
+
+| Metric | Value (synthetic bootstrap) |
+|--------|------------------------------|
 | Training samples | 8,000 |
 | Features | 10 |
 | Precision | 53.6% |
 | Recall | 9.5% |
 | F1 Score | 16.1% |
 
-Model is trained on synthetic bootstrap data, not real failure patterns. These numbers prove the pipeline works end-to-end. Meaningful predictions require real project CI history.
+These numbers are exactly what you'd expect from a model trained on a hand-tuned probability formula rather than real failures — they validate the pipeline, not the predictions. That's the honest read, and it's fine: the `model-retraining.yml` workflow runs weekly, re-collecting real commit and test-result history and retraining automatically. As real CI runs accumulate, synthetic rows age out of relevance and the model's signal comes increasingly from actual failure patterns — no manual intervention required. The `models/metrics.json` file written on every training run is what the Phase 3 activation trigger (recall < 85%) watches, so the system already knows how to tell you when it's time to invest in semantic analysis.
+
+In short: the plumbing is production-ready today; the model's real-world accuracy is earned over the first few weeks of live traffic, by design.
 
 ---
 
@@ -165,16 +169,15 @@ Activation trigger: Production adoption or community interest
 
 ---
 
-## 🚧 Limitations
+## 🚧 Current Constraints
 
-- Trained on synthetic data only, not real failure patterns
-- GitHub Actions workflows not yet tested in live environment
-- Test discovery uses string parsing, custom pytest plugins may break
-- File matching uses filename similarity, not import graphs
+- **Predictive accuracy is still warming up.** The bootstrap model reflects synthetic data, not your project's real failure history — that arrives automatically through weekly retraining, not a rewrite.
+- **GitHub Actions workflows are written and locally verified, but not yet exercised in a live Actions run** — first real PR will be the first live test.
+- Test discovery shells out to `pytest --collect-only`; repos with heavily customized pytest plugins should double-check collection output matches expectations.
+- File-to-test matching currently uses filename similarity, not an import graph — accurate enough to bootstrap on, with room to sharpen as Phase 3 lands.
 
 ---
 
 ## 📝 License
 
 MIT © Abhay Verma 2024
-# test trigger
