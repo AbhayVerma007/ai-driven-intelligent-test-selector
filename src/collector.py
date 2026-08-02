@@ -314,28 +314,73 @@ class TestHistoryCollector:
     # Synthetic bootstrap data (cold-start)
     # ------------------------------------------------------------------
 
-    def generate_synthetic_data(self, n_commits: int = 200, n_tests: int = 40, seed: int = 42) -> int:
-        """Populate the DB with synthetic commit/test-result history so the model
-        has something to train on before enough real CI runs have accumulated."""
+    # Fixed source-file -> test-module dependency map. Test module stems are
+    # chosen to match the source file stems exactly so that
+    # trainer.compute_file_overlap() (SequenceMatcher over stems) actually
+    # picks up the relationship — in the old generator the test names
+    # ("test_module_0", "test_module_1", ...) never resembled any real
+    # filename, so file_overlap_score was near-zero noise for every row.
+    DEPENDENCY_MAP: dict[str, str] = {
+        "auth": "src/auth.py",
+        "models": "src/models.py",
+        "api": "src/api/routes.py",
+        "utils": "src/utils.py",
+        "migrations": "src/db/migrations/0001_init.py",
+        "settings": "config/settings.yaml",
+        "collector": "src/collector.py",
+    }
+
+    # developer_failure_rate is a real feature the model trains on — give it
+    # an actual signal to find by assigning each synthetic author a fixed
+    # risk multiplier ("new-dev" commits fail ~3x as often as "senior-dev").
+    DEVELOPER_RISK_MULTIPLIERS: dict[str, float] = {
+        "new-dev@example.com": 3.0,
+        "junior-dev@example.com": 2.0,
+        "mid-dev@example.com": 1.0,
+        "experienced-dev@example.com": 0.6,
+        "senior-dev@example.com": 0.33,
+    }
+
+    def generate_synthetic_data(
+        self, n_commits: int = 200, n_tests: int = 40, seed: int = 42
+    ) -> int:
+        """Populate the DB with synthetic commit/test-result history so the
+        model has something to train on before enough real CI runs have
+        accumulated.
+
+        Unlike a purely random label generator, failures here are driven by
+        deliberate, learnable patterns that mirror the model's real feature
+        set: file-to-test dependency overlap (strongest signal), developer
+        risk profile, code churn, and config/DB/API change flags. A test
+        only fails at a high base rate when a file it actually depends on
+        changed — everything else fails at a low background rate — which is
+        exactly the relationship `file_overlap_score` and the other trained
+        features are meant to capture.
+        """
         rng = random.Random(seed)
-        test_names = [f"tests/test_module_{i // 8}.py::test_case_{i}" for i in range(n_tests)]
-        critical_tests = set(rng.sample(test_names, k=max(1, n_tests // 10)))
-        authors = ["alice@example.com", "bob@example.com", "carol@example.com"]
-        file_pool = [
-            "src/auth.py", "src/models.py", "src/api/routes.py", "src/utils.py",
-            "src/db/migrations/0001_init.py", "config/settings.yaml", "src/collector.py",
+        stems = list(self.DEPENDENCY_MAP.keys())
+        tests_per_module = max(1, n_tests // len(stems))
+        test_names = [
+            f"tests/test_{stem}.py::test_case_{stem}_{j}"
+            for stem in stems
+            for j in range(tests_per_module)
         ]
+        critical_tests = set(rng.sample(test_names, k=max(1, len(test_names) // 10)))
+        authors = list(self.DEVELOPER_RISK_MULTIPLIERS.keys())
+        file_pool = list(self.DEPENDENCY_MAP.values())
         base_time = datetime.now(timezone.utc) - timedelta(days=n_commits)
 
         with sqlite3.connect(self.db_path) as conn:
             for i in range(n_commits):
                 commit_hash = f"synthetic{i:06x}"
-                timestamp = (base_time + timedelta(hours=i * 6)).isoformat()
+                commit_time = base_time + timedelta(hours=i * 6)
+                timestamp = commit_time.isoformat()
                 author = rng.choice(authors)
+                dev_multiplier = self.DEVELOPER_RISK_MULTIPLIERS[author]
                 changed_files = rng.sample(file_pool, k=rng.randint(1, 3))
                 features = DiffFeatures(
-                    lines_added=rng.randint(1, 120),
-                    lines_deleted=rng.randint(0, 60),
+                    lines_added=rng.randint(1, 150),
+                    lines_deleted=rng.randint(0, 80),
                     functions_modified=[f"func_{rng.randint(0, 20)}"],
                     imports_changed=[],
                     file_types=sorted({Path(f).suffix for f in changed_files}),
@@ -351,21 +396,44 @@ class TestHistoryCollector:
                      json.dumps(changed_files), json.dumps(features.to_dict())),
                 )
 
-                # riskier commits (config/db/api changes, big churn) fail more tests
-                risk_bump = 0.0
-                if features.has_config_change:
-                    risk_bump += 0.15
-                if features.has_db_migration:
-                    risk_bump += 0.2
-                if features.has_api_change:
-                    risk_bump += 0.1
-                if features.lines_added + features.lines_deleted > 100:
-                    risk_bump += 0.1
+                is_big_churn = (features.lines_added + features.lines_deleted) > 100
+                is_wide_change = len(changed_files) > 3
+                is_friday = commit_time.weekday() == 4  # Monday=0 ... Friday=4
 
                 rows = []
                 for test_name in test_names:
-                    base_fail_rate = 0.25 if test_name in critical_tests else 0.08
-                    fail_prob = min(0.9, base_fail_rate + risk_bump)
+                    stem = test_name.split("::")[0].rsplit("/", 1)[-1][len("test_"):-len(".py")]
+                    dependency_file = self.DEPENDENCY_MAP[stem]
+                    touches_dependency = dependency_file in changed_files
+
+                    # 1. File-to-test mapping — the dominant signal.
+                    base_fail_rate = 0.85 if touches_dependency else 0.05
+                    if test_name in critical_tests:
+                        base_fail_rate = min(0.95, base_fail_rate + 0.05)
+
+                    fail_prob = base_fail_rate
+
+                    # 4. Config/DB/API changes are risky project-wide, not
+                    # just for the directly-touched module.
+                    if features.has_config_change:
+                        fail_prob = max(fail_prob, 0.90)
+                    if features.has_db_migration:
+                        fail_prob = max(fail_prob, 0.80)
+
+                    # 3. Code churn amplifies whatever risk is already present.
+                    if is_big_churn:
+                        fail_prob = min(0.97, fail_prob * (3.0 if fail_prob < 0.5 else 1.15))
+                    if is_wide_change:
+                        fail_prob = min(0.97, fail_prob * (2.0 if fail_prob < 0.5 else 1.10))
+
+                    # 2. Developer risk profile.
+                    fail_prob = min(0.97, fail_prob * dev_multiplier)
+
+                    # 5. Temporal pattern (Friday deploys are riskier).
+                    if is_friday:
+                        fail_prob = min(0.97, fail_prob * 1.5)
+
+                    fail_prob = max(0.02, fail_prob)
                     status = "failed" if rng.random() < fail_prob else "passed"
                     duration = round(rng.uniform(0.05, 3.0), 3)
                     rows.append((commit_hash, test_name, status, duration, None))
@@ -374,7 +442,7 @@ class TestHistoryCollector:
                        VALUES (?, ?, ?, ?, ?)""",
                     rows,
                 )
-        logger.info("Generated %d synthetic commits x %d tests", n_commits, n_tests)
+        logger.info("Generated %d synthetic commits x %d tests", n_commits, len(test_names))
         return n_commits
 
 
