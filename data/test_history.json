@@ -40037,5 +40037,434 @@
         "duration": 1.178
       }
     ]
+  },
+  {
+    "commit": "0462f96bbfccdc895436ba6ba3022a57a723262c",
+    "timestamp": "2026-08-02T01:37:24+05:30",
+    "author": "vermaabhay085@gmail.com",
+    "changed_files": [
+      "README.md"
+    ],
+    "diff_features": {
+      "lines_added": 2,
+      "lines_deleted": 1,
+      "functions_modified": [],
+      "imports_changed": [],
+      "file_types": [
+        ".md"
+      ],
+      "has_config_change": false,
+      "has_db_migration": false,
+      "has_api_change": false
+    },
+    "test_results": []
+  },
+  {
+    "commit": "0b001da8d9f7f9109ca4d71460f2a6a8fa628fb0",
+    "timestamp": "2026-08-02T01:15:14+05:30",
+    "author": "vermaabhay085@gmail.com",
+    "changed_files": [
+      ".github/workflows/intelligent-testing.yml"
+    ],
+    "diff_features": {
+      "lines_added": 8,
+      "lines_deleted": 3,
+      "functions_modified": [],
+      "imports_changed": [],
+      "file_types": [
+        ".yml"
+      ],
+      "has_config_change": true,
+      "has_db_migration": false,
+      "has_api_change": false
+    },
+    "test_results": []
+  },
+  {
+    "commit": "134d69724b47e45db10368ad3f61244ee7902bfc",
+    "timestamp": "2026-08-02T01:10:05+05:30",
+    "author": "vermaabhay085@gmail.com",
+    "changed_files": [
+      "data/test_history.db",
+      "data/test_history.json",
+      "models/metrics.json",
+      "models/test_failure_model.joblib"
+    ],
+    "diff_features": {
+      "lines_added": 20596,
+      "lines_deleted": 65582,
+      "functions_modified": [],
+      "imports_changed": [],
+      "file_types": [
+        ".db",
+        ".joblib",
+        ".json"
+      ],
+      "has_config_change": true,
+      "has_db_migration": false,
+      "has_api_change": false
+    },
+    "test_results": []
+  },
+  {
+    "commit": "d2937f8dcb0d6f96cc9d925ee157d1b72cc32982",
+    "timestamp": "2026-08-02T01:06:35+05:30",
+    "author": "vermaabhay085@gmail.com",
+    "changed_files": [
+      "README.md"
+    ],
+    "diff_features": {
+      "lines_added": 7,
+      "lines_deleted": 5,
+      "functions_modified": [],
+      "imports_changed": [],
+      "file_types": [
+        ".md"
+      ],
+      "has_config_change": false,
+      "has_db_migration": false,
+      "has_api_change": false
+    },
+    "test_results": []
+  },
+  {
+    "commit": "6f91ebcb7abb84b186ab065075f8cef768e2654a",
+    "timestamp": "2026-08-02T00:11:17+05:30",
+    "author": "vermaabhay085@gmail.com",
+    "changed_files": [
+      "README.md"
+    ],
+    "diff_features": {
+      "lines_added": 13,
+      "lines_deleted": 10,
+      "functions_modified": [],
+      "imports_changed": [],
+      "file_types": [
+        ".md"
+      ],
+      "has_config_change": false,
+      "has_db_migration": false,
+      "has_api_change": false
+    },
+    "test_results": []
+  },
+  {
+    "commit": "78b8350015aa9cb919f4ead5913679f0cd27037f",
+    "timestamp": "2026-08-01T23:06:22+05:30",
+    "author": "vermaabhay085@gmail.com",
+    "changed_files": [
+      ".github/workflows/intelligent-testing.yml",
+      "data/audit_log.jsonl",
+      "data/demo/audit_log.jsonl",
+      "data/demo/history.db",
+      "data/demo/history.json",
+      "data/demo/model.joblib",
+      "data/demo/selection_report_high_risk.md",
+      "data/demo/selection_report_low_risk.md",
+      "data/selected_tests.json",
+      "data/test_history.db",
+      "data/test_history.json",
+      "models/feature_importance.png",
+      "models/metrics.json",
+      "models/test_failure_model.joblib",
+      "src/cli.py"
+    ],
+    "diff_features": {
+      "lines_added": 54560,
+      "lines_deleted": 69374,
+      "functions_modified": [],
+      "imports_changed": [
+        "json",
+        "pathlib"
+      ],
+      "file_types": [
+        ".db",
+        ".joblib",
+        ".json",
+        ".jsonl",
+        ".md",
+        ".png",
+        ".py",
+        ".yml"
+      ],
+      "has_config_change": true,
+      "has_db_migration": false,
+      "has_api_change": false
+    },
+    "test_results": []
+  },
+  {
+    "commit": "77ae0f81d22e6704d7c776f9819ad10dfb0b12bc",
+    "timestamp": "2026-08-01T22:48:05+05:30",
+    "author": "vermaabhay085@gmail.com",
+    "changed_files": [
+      "README.md"
+    ],
+    "diff_features": {
+      "lines_added": 1,
+      "lines_deleted": 0,
+      "functions_modified": [],
+      "imports_changed": [],
+      "file_types": [
+        ".md"
+      ],
+      "has_config_change": false,
+      "has_db_migration": false,
+      "has_api_change": false
+    },
+    "test_results": []
+  },
+  {
+    "commit": "db69b6127f1b7d815d2eb5d6e3aa5100c92f8f17",
+    "timestamp": "2026-08-01T22:42:00+05:30",
+    "author": "vermaabhay085@gmail.com",
+    "changed_files": [
+      ".github/workflows/intelligent-testing.yml",
+      ".github/workflows/model-retraining.yml",
+      ".gitignore",
+      "README.md",
+      "data/audit_log.jsonl",
+      "data/demo/audit_log.jsonl",
+      "data/demo/history.db",
+      "data/demo/history.json",
+      "data/demo/model.joblib",
+      "data/demo/selection_report_high_risk.md",
+      "data/demo/selection_report_low_risk.md",
+      "data/selected_tests.json",
+      "data/selection_report.md",
+      "data/test_history.db",
+      "data/test_history.json",
+      "examples/__init__.py",
+      "examples/basic_demo.py",
+      "models/feature_importance.png",
+      "models/test_failure_model.joblib",
+      "plan.md",
+      "pytest.ini",
+      "requirements.txt",
+      "setup.py",
+      "src/__init__.py",
+      "src/cli.py",
+      "src/collector.py",
+      "src/selector.py",
+      "src/trainer.py",
+      "tests/__init__.py",
+      "tests/test_collector.py",
+      "tests/test_selector.py"
+    ],
+    "diff_features": {
+      "lines_added": 101947,
+      "lines_deleted": 1,
+      "functions_modified": [
+        "main",
+        "cmd_collect",
+        "cmd_train",
+        "cmd_select",
+        "build_parser",
+        "main",
+        "to_dict",
+        "__init__",
+        "_validate_git_repo",
+        "_init_db",
+        "collect_commit_history",
+        "_current_branch",
+        "_get_changed_files",
+        "get_diff_between_refs",
+        "_get_diff_for_commit",
+        "extract_diff_features",
+        "run_test_suite",
+        "_parse_junit_xml",
+        "_save_commit",
+        "save_test_results",
+        "export_to_json",
+        "generate_synthetic_data",
+        "__init__",
+        "_replay_history",
+        "discover_tests",
+        "score_tests",
+        "is_critical",
+        "select_tests",
+        "_write_audit_log",
+        "generate_report",
+        "_test_module_stem",
+        "compute_file_overlap",
+        "build_feature_row",
+        "__init__",
+        "current_features",
+        "update",
+        "advance_commit",
+        "known_tests",
+        "__init__",
+        "load_data",
+        "build_feature_matrix",
+        "train",
+        "save_model",
+        "load_model",
+        "plot_feature_importance",
+        "predict_proba",
+        "collector",
+        "test_validate_git_repo_raises_outside_repo",
+        "test_extract_diff_features_detects_config_and_api_changes",
+        "test_generate_synthetic_data_populates_db",
+        "selector",
+        "test_critical_test_always_selected_even_if_scored_low",
+        "test_max_skip_rate_cap_enforced",
+        "test_low_risk_minimum_sample_rate_enforced",
+        "test_audit_log_written_for_every_selection",
+        "test_generate_report_contains_summary"
+      ],
+      "imports_changed": [
+        "json",
+        "__future__",
+        "json",
+        "pathlib",
+        "src.collector",
+        "src.selector",
+        "src.trainer",
+        "setuptools",
+        "__future__",
+        "argparse",
+        "json",
+        "logging",
+        "pathlib",
+        "src.collector",
+        "src.selector",
+        "src.trainer",
+        "__future__",
+        "json",
+        "logging",
+        "random",
+        "re",
+        "sqlite3",
+        "subprocess",
+        "sys",
+        "tempfile",
+        "xml.etree.ElementTree",
+        "dataclasses",
+        "datetime",
+        "pathlib",
+        "typing",
+        "__future__",
+        "json",
+        "logging",
+        "random",
+        "re",
+        "subprocess",
+        "sys",
+        "dataclasses",
+        "datetime",
+        "pathlib",
+        "typing",
+        "pandas",
+        "src.trainer",
+        "__future__",
+        "json",
+        "logging",
+        "collections",
+        "difflib",
+        "pathlib",
+        "typing",
+        "joblib",
+        "pandas",
+        "sklearn.ensemble",
+        "sklearn.metrics",
+        "sklearn.model_selection",
+        "matplotlib",
+        "matplotlib.pyplot",
+        "pathlib",
+        "pytest",
+        "src.collector",
+        "json",
+        "json",
+        "pytest",
+        "src.collector",
+        "src.selector",
+        "src.trainer"
+      ],
+      "file_types": [
+        ".db",
+        ".ini",
+        ".joblib",
+        ".json",
+        ".jsonl",
+        ".md",
+        ".png",
+        ".py",
+        ".txt",
+        ".yml"
+      ],
+      "has_config_change": true,
+      "has_db_migration": false,
+      "has_api_change": false
+    },
+    "test_results": []
+  },
+  {
+    "commit": "c43f50d583dac5cd421aa4f54e42a840491f0dbc",
+    "timestamp": "2026-07-30T18:22:13+05:30",
+    "author": "vermaabhay085@gmail.com",
+    "changed_files": [
+      "src/auth.py"
+    ],
+    "diff_features": {
+      "lines_added": 1,
+      "lines_deleted": 1,
+      "functions_modified": [
+        "login"
+      ],
+      "imports_changed": [],
+      "file_types": [
+        ".py"
+      ],
+      "has_config_change": false,
+      "has_db_migration": false,
+      "has_api_change": false
+    },
+    "test_results": []
+  },
+  {
+    "commit": "cdbe7ad2b80a8a2a7f3ff619b0af2a42e5b23e31",
+    "timestamp": "2026-07-30T18:22:05+05:30",
+    "author": "vermaabhay085@gmail.com",
+    "changed_files": [
+      "src/auth.py",
+      "tests/test_auth.py"
+    ],
+    "diff_features": {
+      "lines_added": 2,
+      "lines_deleted": 0,
+      "functions_modified": [
+        "login",
+        "test_login"
+      ],
+      "imports_changed": [],
+      "file_types": [
+        ".py"
+      ],
+      "has_config_change": false,
+      "has_db_migration": false,
+      "has_api_change": false
+    },
+    "test_results": []
+  },
+  {
+    "commit": "0424989281a5632b52fdcab39974e744d5472e88",
+    "timestamp": "2026-07-30T18:20:04+05:30",
+    "author": "vermaabhay085@gmail.com",
+    "changed_files": [
+      "README.md"
+    ],
+    "diff_features": {
+      "lines_added": 1,
+      "lines_deleted": 0,
+      "functions_modified": [],
+      "imports_changed": [],
+      "file_types": [
+        ".md"
+      ],
+      "has_config_change": false,
+      "has_db_migration": false,
+      "has_api_change": false
+    },
+    "test_results": []
   }
 ]
